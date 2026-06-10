@@ -1,0 +1,15 @@
+import streamlit as st
+import google.generativeai as genai
+from docx import Document
+genai.configure(api_key="")
+model=genai.GenerativeModel("gemini-2.5-flash")
+st.title("Resume Generator")
+prompt=st.text_input("Enter your content:")
+a="You are a resume geneartor , create a resume or cover letter based on the content given by the user., The features of the resume should pass ATS Formatting and job matching also include the key skills, experience , education , summary , projects and a cover letter if the user wants to generate a cover letter"
+if st.button("submit"):
+    response=model.generate_content(a+prompt)
+    # st.write(response.text)
+    document = Document()
+    document.add_paragraph(response.text)
+    document.save("Resume.docx")
+    st.download_button(label="Download Resume",  file_name="Resume.docx", data =open("Resume.docx", "rb"), mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
